@@ -121,6 +121,33 @@ def get_registry() -> dict[str, TestSuite]:
             ),
         ),
         SecurityTestSuite(
+            "crash_stability",
+            "security",
+            {"security", "stability", "crash", "anr", "monkey", "lifecycle"},
+            checks=(
+                SuiteCheck(
+                    "stability.anr_detection",
+                    "ANR Detection",
+                    "Scans logcat for ANR signatures (Input dispatching timed out / ANR in package).",
+                ),
+                SuiteCheck(
+                    "crashlog.capture",
+                    "Crash Log Capture",
+                    "Collects fatal exception/native tombstone process death signals from crash artifacts.",
+                ),
+                SuiteCheck(
+                    "stability.monkey_integration",
+                    "Monkey Testing Integration",
+                    "Executes adb monkey and parses summary metrics for crash/ANR/abort evidence.",
+                ),
+                SuiteCheck(
+                    "stability.background_foreground_stress",
+                    "Background/Foreground Stress",
+                    "Cycles app through background/foreground transitions and checks lifecycle stability.",
+                ),
+            ),
+        ),
+        SecurityTestSuite(
             "runtime_inspection",
             "security",
             {"security", "runtime", "mitm", "storage", "logs"},
