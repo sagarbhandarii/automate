@@ -120,6 +120,33 @@ def get_registry() -> dict[str, TestSuite]:
                 SuiteCheck("tamper.apk_resigning", "Tamper Detection - APK Resigning Check", "Validating signing cert digest against expected."),
             ),
         ),
+        SecurityTestSuite(
+            "runtime_inspection",
+            "security",
+            {"security", "runtime", "mitm", "storage", "logs"},
+            checks=(
+                SuiteCheck(
+                    "ssl_pinning.validation",
+                    "SSL Pinning Validation",
+                    "Runs MITM probe telemetry checks for forged certificate acceptance.",
+                ),
+                SuiteCheck(
+                    "mitm_simulation.hooks",
+                    "MITM Simulation Hooks",
+                    "Validates expected Frida hook telemetry markers for SSL interception paths.",
+                ),
+                SuiteCheck(
+                    "logcat.sensitive_data",
+                    "Logcat Sensitive Data Scan",
+                    "Scans runtime logs for secrets, bearer tokens, and JWT-like values.",
+                ),
+                SuiteCheck(
+                    "storage.shared_prefs",
+                    "File and SharedPreferences Inspection",
+                    "Inspects app files/shared_prefs dumps for secrets and weak permissions.",
+                ),
+            ),
+        ),
         TestSuite("network_ssl", "security", {"security", "network", "ssl"}),
         TestSuite("manifest_config", "security", {"security", "manifest", "static"}),
         TestSuite("performance_baseline", "performance", {"performance", "benchmark"}),
