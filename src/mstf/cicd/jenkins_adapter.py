@@ -1,0 +1,1 @@
+"""Module: jenkins_adapter."""
