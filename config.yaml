@@ -37,6 +37,9 @@ security_tests:
     - id: tampering
       enabled: true
       severity_threshold: high
+    - id: emulator_detection
+      enabled: true
+      severity_threshold: high
     - id: network_ssl
       enabled: true
       severity_threshold: high

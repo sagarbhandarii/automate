@@ -31,7 +31,7 @@ class TestOrchestrator:
         self._registry = get_registry()
         self._device_manager = DeviceManager()
 
-    def run(self) -> list[dict[str, str]]:
+    def run(self) -> list[dict[str, object]]:
         """Start one test run."""
         devices = self._device_manager.detect(self._config.devices)
         if not devices:
@@ -49,7 +49,7 @@ class TestOrchestrator:
 
         self._logger.info("Running %s suites across %s devices with %s worker(s).", len(selected_suites), len(devices), workers)
 
-        results: list[dict[str, str]] = []
+        results: list[dict[str, object]] = []
         with ThreadPoolExecutor(max_workers=workers) as executor:
             futures = [executor.submit(self._run_with_retry, unit) for unit in run_units]
             for future in as_completed(futures):
@@ -59,7 +59,7 @@ class TestOrchestrator:
         self._logger.info("Execution complete. Passed: %s / %s", passed, len(results))
         return results
 
-    def _run_with_retry(self, unit: SuiteRun) -> dict[str, str]:
+    def _run_with_retry(self, unit: SuiteRun) -> dict[str, object]:
         attempts = self._config.execution.retry.count
         return retry_call(lambda: unit.suite.execute(unit.device_serial), attempts=attempts)
 
