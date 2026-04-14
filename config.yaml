@@ -1,0 +1,63 @@
+framework:
+  name: mobile-security-sdk-testing-framework
+  environment: local
+  log_level: INFO
+  output_dir: reports/artifacts
+  parallel_workers: 4
+
+application:
+  app_name: sample-secure-sdk-app
+  package_name: com.example.securesdk
+  apk_path: ./artifacts/app-under-test.apk
+  launch_activity: com.example.securesdk.MainActivity
+
+execution:
+  profile: smoke
+  retry_count: 1
+  timeout_seconds: 900
+  stop_on_critical: true
+
+devices:
+  provider: local_adb
+  required:
+    min_android_api: 26
+    rooted_allowed: true
+  targets:
+    - serial: emulator-5554
+      alias: pixel_api_34
+
+security_tests:
+  suites:
+    - id: root_detection
+      enabled: true
+      severity_threshold: high
+    - id: hooking_frida
+      enabled: true
+      severity_threshold: critical
+    - id: tampering
+      enabled: true
+      severity_threshold: high
+    - id: network_ssl
+      enabled: true
+      severity_threshold: high
+    - id: manifest_config
+      enabled: true
+      severity_threshold: medium
+
+performance:
+  enabled: true
+  capture_interval_seconds: 5
+  baseline_file: ./configs/policies/performance_baseline.json
+
+reporting:
+  formats: [json, junit, html]
+  include_logs: true
+  include_screenshots: true
+  risk_scoring: true
+
+cicd:
+  provider: github_actions
+  fail_pipeline_on:
+    critical_findings: 1
+    high_findings: 5
+  publish_artifacts: true
