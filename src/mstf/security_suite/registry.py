@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from time import sleep
 
+from mstf.security_suite.bypass_testing import BYPASS_SIMULATION_DEFINITIONS
+
 
 @dataclass(slots=True)
 class TestSuite:
@@ -103,6 +105,12 @@ def get_registry() -> dict[str, TestSuite]:
             "security",
             {"security", "emulator", "environment"},
             checks=(SuiteCheck("emulator.fingerprint", "Emulator Detection", "Evaluating build fingerprint and hardware profile."),),
+        ),
+        SecurityTestSuite(
+            "advanced_bypass_testing",
+            "security",
+            {"security", "bypass", "simulation", "frida", "runtime"},
+            checks=tuple(SuiteCheck(*item) for item in BYPASS_SIMULATION_DEFINITIONS),
         ),
         SecurityTestSuite(
             "tampering",
